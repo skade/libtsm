@@ -69,11 +69,7 @@ AM_CFLAGS = \
 AM_CPPFLAGS = \
 	-include $(top_builddir)/config.h \
 	-I $(srcdir)/src
-AM_LDFLAGS = \
-	-Wl,--as-needed \
-	-Wl,--gc-sections \
-	-Wl,-z,relro \
-	-Wl,-z,now
+AM_LDFLAGS =
 
 if BUILD_ENABLE_DEBUG
 AM_CFLAGS += -g
@@ -134,9 +130,7 @@ libtsm_la_CPPFLAGS = $(AM_CPPFLAGS)
 libtsm_la_LIBADD = libshl.la
 EXTRA_libtsm_la_DEPENDENCIES = $(top_srcdir)/docs/libtsm.sym
 libtsm_la_LDFLAGS = \
-	$(AM_LDFLAGS) \
-	-version-info $(LIBTSM_CURRENT):$(LIBTSM_REVISION):$(LIBTSM_AGE) \
-	-Wl,--version-script="$(top_srcdir)/docs/libtsm.sym"
+	$(AM_LDFLAGS)
 
 if BUILD_HAVE_XKBCOMMON
 libtsm_la_CPPFLAGS += $(XKBCOMMON_CFLAGS)
