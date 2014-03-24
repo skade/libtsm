@@ -23,6 +23,20 @@ AM_SILENT_RULES([yes])
 
 AC_SUBST(PACKAGE_DESCRIPTION, ["terminal-emulator state machine"])
 
+AC_MSG_CHECKING([if compiling with clang])
+
+AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([], [[
+#ifndef __clang__
+       not clang
+#endif
+]])],
+[have_clang=yes], [have_clang=no])
+
+AM_CONDITIONAL([BUILD_HAVE_CLANG], [test "x$have_clang" = "xyes"])
+
+AC_MSG_RESULT([$CLANG])
+
 #
 # Don't add a default "-g -O2" if CFLAGS wasn't specified. For debugging it is
 # often more convenient to have "-g -O0". You can still override it by

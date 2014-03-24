@@ -70,11 +70,16 @@ AM_CFLAGS = \
 AM_CPPFLAGS = \
 	-include $(top_builddir)/config.h \
 	-I $(srcdir)/src
+
+if BUILD_HAVE_CLANG
+AM_LDFLAGS =
+else
 AM_LDFLAGS = \
 	-Wl,--as-needed \
 	-Wl,--gc-sections \
 	-Wl,-z,relro \
 	-Wl,-z,now
+endif
 
 if BUILD_ENABLE_DEBUG
 AM_CFLAGS += -g
@@ -135,10 +140,15 @@ libtsm_test_la_LIBADD = libshl.la
 
 EXTRA_libtsm_la_DEPENDENCIES = $(top_srcdir)/docs/libtsm.sym
 
+if BUILD_HAVE_CLANG
+libtsm_la_LDFLAGS = $(AM_LDFLAGS)
+else
 libtsm_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	-version-info $(LIBTSM_CURRENT):$(LIBTSM_REVISION):$(LIBTSM_AGE) \
 	-Wl,--version-script="$(top_srcdir)/docs/libtsm.sym"
+endif
+
 libtsm_test_la_LDFLAGS = \
 	$(AM_LDFLAGS)
 
