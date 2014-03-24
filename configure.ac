@@ -117,6 +117,29 @@ AM_CONDITIONAL([BUILD_ENABLE_OPTIMIZATIONS],
                [test "x$enable_optimizations" = "xyes"])
 
 #
+# Check whether the linker we are linking with is GNU ld.
+#
+# Also, check for the operating system to decide on linker
+# flags later on.
+#
+
+AM_CONDITIONAL([BUILD_HAVE_GNU_LD],
+               [test "x$with_gnu_ld" = "xyes"])
+
+case "$host_os" in
+  darwin*)
+    $with_darwin = "xyes";;
+  *)
+    $with_unknown_os = "xyes";;
+esac
+
+AM_CONDITIONAL([BUILD_HAVE_DARWIN],
+               [test "x$with_darwin" = "xyes"])
+
+AM_CONDITIONAL([BUILD_HAVE_UNKNOWN_OS],
+               [test "x$with_unknown_os" = "xyes"])
+
+#
 # Makefile vars
 # After everything is configured, we create all makefiles.
 #

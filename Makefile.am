@@ -70,11 +70,24 @@ AM_CFLAGS = \
 AM_CPPFLAGS = \
 	-include $(top_builddir)/config.h \
 	-I $(srcdir)/src
+
+if BUILD_HAVE_GNU_LD
 AM_LDFLAGS = \
 	-Wl,--as-needed \
 	-Wl,--gc-sections \
 	-Wl,-z,relro \
 	-Wl,-z,now
+else
+if BUILD_HAVE_DARWIN
+AM_LDFLAGS = \
+	-Wl,-dead_strip \
+	-Wl,-dead_strip_dylibs \
+	-Wl,-bind_at_load
+endif
+if BUILD_HAVE_UNKNOWN_OS
+AM_LDFLAGS = # Let's try anyways
+endif
+endif
 
 if BUILD_ENABLE_DEBUG
 AM_CFLAGS += -g
@@ -135,10 +148,17 @@ libtsm_test_la_LIBADD = libshl.la
 
 EXTRA_libtsm_la_DEPENDENCIES = $(top_srcdir)/docs/libtsm.sym
 
+if BUILD_HAVE_GNU_LD
 libtsm_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	-version-info $(LIBTSM_CURRENT):$(LIBTSM_REVISION):$(LIBTSM_AGE) \
 	-Wl,--version-script="$(top_srcdir)/docs/libtsm.sym"
+else
+libtsm_la_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-version-info $(LIBTSM_CURRENT):$(LIBTSM_REVISION):$(LIBTSM_AGE)
+endif
+
 libtsm_test_la_LDFLAGS = \
 	$(AM_LDFLAGS)
 
